@@ -24,7 +24,15 @@
 - [] Release the Seagull-100w and Seagull-3k datasets.
 - [] Release the online demo
 
-<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://star-history.com/embed?secret=Z2hwX3pMYzFnN205QVhhZlIwNmhyTFdtZ2NxQ3FjNFpoWDFYZkJncw==#chencn2020/PromptIQA&Date" frameBorder="0"></iframe>
+## Stars ⭐️
+
+<a href="https://star-history.com/#chencn2020/Seagull&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=chencn2020/Seagull&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=chencn2020/Seagull&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=chencn2020/Seagull&type=Date" />
+ </picture>
+</a>
 
 ## Citation 🖊️
 If our work is useful to your research, we will be grateful for you to cite our paper:
