@@ -1,5 +1,5 @@
 
-  <img src="./imgs/Logo/logo.png" alt="iSEAGULL" style="height: auto; width: 100%; margin-bottom: 3%;">
+  <img src="./imgs/Logo/logo.png" alt="SEAGULL" style="height: auto; width: 100%; margin-bottom: 3%;">
 
   <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%;">
     <a href=""><img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm-dark.svg" alt="Open in Spaces" style="max-width: 100%; height: auto;"></a>
