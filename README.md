@@ -11,7 +11,7 @@
 
 :rocket:  :rocket: :rocket: **News:**
 - To be updated...
-- ✅ **Nov. 25, 2024**: We make SEAGULL-100w publicly available at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w) and [Baidu Network](https://pan.baidu.com/s/1PY_EqdwY1FsCVfNpEXrlHA?pwd=i7h1). More details can be found at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w).
+- ✅ **Nov. 25, 2024**: We make SEAGULL-100w publicly available at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w) and [Baidu Netdisk](https://pan.baidu.com/s/1PY_EqdwY1FsCVfNpEXrlHA?pwd=i7h1). More details can be found at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w).
 - ✅ **Nov. 12, 2024**: We create this repository.
 
 
