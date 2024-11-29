@@ -24,10 +24,16 @@
 - [] Release the SEAGULL-3k dataset.
 
 ## Contents 📌
-1. [Introduction 👀](#Introduction)
-2. [Try Our Demo 🕹️](#Try-Our-Demo)
-3. [Demonstrate 🎥](#Demonstrate)
-4. [Acknowledgement 💌](#Acknowledgement)
+- [TODO List 📝](#todo-list-)
+- [Contents 📌](#contents-)
+- [Introduction 👀](#introduction-)
+- [Try Our Demo 🕹️](#try-our-demo-️)
+  - [Online demo](#online-demo)
+  - [Offline demo](#offline-demo)
+- [Demonstrate 🎥](#demonstrate-)
+- [Acknowledgement 💌](#acknowledgement-)
+- [Stars ⭐️](#stars-️)
+- [Citation 🖊️](#citation-️)
 
 ## Introduction 👀
 <div id="Introduction"></div>

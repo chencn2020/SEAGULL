@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html class="full-height" lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SEAGULL</title>
+  <meta name="description"
+    content="No-reference Image Quality Assessment for Regions of Interest via Vision-Language Instruction Tuning" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="styles/column.css" rel="stylesheet">
+  <link href="css/mdb.min.css" rel="stylesheet">
+
+  <!-- include jQuery library -->
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/popper.min.js"></script>
+  <script type="text/javascript" src="js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/mdb.min.js"></script>
+
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/include_once.js"></script>
+  <script>
+    function toggle_heatmap() {
+      $(this).attr('src', $(this).attr('src').replace("_raw.jpg", "_map.jpg"));
+    }
+    function toggle_image() {
+      $(this).attr('src', $(this).attr('src').replace("_map.jpg", "_raw.jpg"));
+    }
+    function show_heatmap() {
+      $('#heatmap').show();
+      $('#imtest').fadeTo(500, 0.2)
+    }
+    function hide_heatmap() {
+      $('#heatmap').hide();
+      $('#imtest').fadeTo(500, 1)
+    }
+    $(document).ready(function () {
+      // $("#imgUploaded").hover(hide_image, show_image);
+      // mobile user
+      // $('#image-with-heatmap').hover(hide_heatmap, show_heatmap);
+      // $('#image-with-heatmap').addClass("column");
+      // $('.advancedcfg').hide();
+      if (isMobile.any()) {
+        // mobile user
+        $('.hovertoggle').bind('touchstart', toggle_heatmap).bind('touchend', toggle_image)
+      }
+      else {
+        $('.hovertoggle').hover(toggle_heatmap, toggle_image);
+      }
+    })
+  </script>
+
+  <script src="js/plotly-latest.min.js"></script>
+  <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="js/include_once.js"></script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-STXPXN06N9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-STXPXN06N9');
+  </script>
+
+  <script>
+    const TOP_MARGIN = 25;
+    const event = new Event('update_qmap');
+    function update_qmap() {
+      document.dispatchEvent(event);
+    }
+    function on_update_qmap(f) {
+      document.addEventListener('update_qmap', function (e) { /* ... */f(); }, false);
+      // elem.addEventListener('build', function (e) { /* ... */ }, false);
+    }
+    function do_stretch() {
+      return document.querySelector('#check_contrast_stretch').checked;
+    }
+    // HTML5
+    var width;
+    var height;
+    // https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+  </script>
+</head>
+
+<body id="top">
+  <header>
+    <!-- Navbar-->
+    <nav class="navbar navbar-expand-lg special-color-dark navbar-dark fixed-top scrolling-navbar" id="navbar">
+      <div class="container"><a class="navbar-brand" href="#"><strong>SEAGULL</strong></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+          aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"><span
+            class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link active" href="#abstract">ABSTRACT</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#applications">APPLICATIONS</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#demonstrate">DEMONSTRATE</a></li>
+            <li class="nav-item"><a class="nav-link active" href="#acknowledgement">ACKNOWLEDGEMENTS</a></li>
+          </ul><a class="btn btn-default btn-rounded my-0" href="#download-zone">DOWNLOAD</a>
+        </div>
+      </div>
+    </nav>
+
+    <section class="py-5 special-color-dark text-white" id="about">
+      <div class="container">
+        <div class="wow fadeIn">
+          <img src="./imgs/Logo/logo.png" alt="SEAGULL"
+    style="height: auto; width: 80%; margin-top: 10%; margin-bottom: 3%; display: block; margin-left: auto; margin-right: auto;">
+          <div
+            style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; width: 100%; margin-bottom: 3%;">
+            <a href="https://huggingface.co/spaces/Zevin2023/SEAGULL"><img
+                src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm-dark.svg"
+                alt="Open in Spaces" style="max-width: 100%; height: auto;"></a>
+            <a href="https://arxiv.org/abs/2411.10161"><img src="https://img.shields.io/badge/Arxiv-2411:10161-red"
+                style="max-width: 100%; height: auto;"></a>
+            <a href="https://huggingface.co/datasets/Zevin2023/SEAGULL-100w"><img
+                src="https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-SEAGULL--100w-green"
+                style="max-width: 100%; height: auto;"></a>
+            <a href="https://hits.seeyoufarm.com"><img
+                src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fchencn2020%2FSeagull&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=Visitors&edge_flat=false"
+                style="max-width: 100%; height: auto;"></a>
+            <a href='https://github.com/chencn2020/Seagull/stargazers'><img
+                src='https://img.shields.io/github/stars/chencn2020/Seagull.svg?style=social'
+                style="max-width: 100%; height: auto;"></a>
+          </div>
+          <div align="center">
+            <div class="authorname" style="font-size:large;">
+              <a href="https://zwchen.top" target="_blank">Zewen Chen</a> <sup>1,2</sup>,
+              <a href="https://people.ucas.ac.cn/~wangjuan" target="_blank">Juan Wang</a> <sup>1</sup>,
+              Wen Wang<sup>3</sup>,
+              Sunhan Xun<sup>4</sup>,
+              Hang Xiong<sup>3</sup>,
+              Yun Zeng<sup>5</sup>,
+              Jian Guo<sup>4</sup>,
+              Shuxun Wang<sup>1</sup>, <br>
+              <a href="https://people.ucas.edu.cn/~yuanchunfeng" target="_blank">Chunfeng Yuan</a> <sup>1</sup>
+              <a href="https://people.ucas.edu.cn/~bingli" target="_blank">Bing Li</a> <sup>1,6</sup>
+              <a href="https://people.ucas.ac.cn/~huweiming" target="_blank">Weiming Hu</a> <sup>1,2,7</sup>
+            </div>
+            <div class="authoraddress">
+              <div class="authoremail email">
+                {chenzewen2022, jun_wang}@ia.ac.cn, bli@nlpr.ia.ac.cn
+              </div>
+
+              <hr>
+              <sup>1</sup> State Key Laboratory of Multimodal Artificial Intelligence Systems, CASIA <br>
+              <sup>2</sup> School of Artificial Intelligence, University of Chinese Academy of Sciences <br>
+              <sup>3</sup> Beijing Jiaotong University;
+              <sup>4</sup> Beijing Union University;
+              <sup>5</sup> China University of Petroleum; <br>
+              <sup>6</sup> PeopleAI Inc. Beijing, China; <br>
+              <sup>7</sup> School of Information Science and Technology, ShanghaiTech University
+              <br />
+            </div>
+            </p>
+          </div>
+    </section>
+
+    <section class="py-5 white" id="abstract">
+      <div class="container">
+
+        <div class="wow fadeInUp">
+          <b style="color:rgb(140, 27, 19)"> TL;DR: </b> We propose a novel network (SEAGULL) and construct two datasets (SEAGULL-100w and SEAGULL-3k) to achieve fine-grained IQA for any ROIs.
+
+          <h2 class="h1 h1-responsive text-center my-5">ABSTRACT</h2>
+          <p class="lead blue-grey-text text-center w-responsive mx-auto mb-5">
+          </p>
+          Existing Image Quality Assessment (IQA) methods achieve remarkable success in analyzing quality for overall
+          image, but few works explore quality analysis for Regions of Interest (ROIs). The quality analysis of ROIs can
+          provide fine-grained guidance for image quality improvement and is crucial for scenarios focusing on
+          region-level quality. This paper proposes a novel network, SEAGULL, which can <strong>SE</strong>e and
+          <strong>A</strong>ssess ROIs quality with <strong>GU</strong>idance from a <strong>L</strong>arge
+          vision-<strong>L</strong>anguage model. SEAGULL incorporates a vision-language model (VLM), masks generated by
+          Segment Anything Model (SAM) to specify ROIs, and a meticulously designed Mask-based Feature Extractor (MFE)
+          to extract global and local tokens for specified ROIs, enabling accurate fine-grained IQA for ROIs. Moreover,
+          this paper constructs two ROI-based IQA datasets, SEAGULL-100w and SEAGULL-3k, for training and evaluating
+          ROI-based IQA. SEAGULL-100w comprises about 100w synthetic distortion images with 33 million ROIs for
+          pre-training to improve the model's ability of regional quality perception, and SEAGULL-3k contains about 3k
+          authentic distortion ROIs to enhance the model's ability to perceive real world distortions. After
+          pre-training on SEAGULL-100w and fine-tuning on SEAGULL-3k, SEAGULL shows remarkable performance on
+          fine-grained ROI quality assessment.
+
+          <img src="./imgs/SEAGULL/framework.png" alt="The framework of SEAGULL"
+            style="height: auto; width: 100%; margin-top: 5px;">
+        </div>
+
+    </section>
+
+    <section class="py-5 text-white" style="background: black;" id="applications">
+      <div class="container">
+        <div class="wow fadeInUp">
+          <h2 class="h1 h1-responsive text-center my-5">APPLICATIONS</h2>
+          <p class="lead blue-grey-text text-center w-responsive mx-auto mb-5">
+            1. Apply on videos for ROI quality monitoring with a tracker algorithm
+          </p>
+          <p class="lead blue-grey-text text-center w-responsive mx-auto mb-5">
+            2. Apply on images for compression algorithm parameters selection to ensure the quality of ROIs.
+          </p>
+        </div>
+    </section>
+
+    <section class="text-center py-5" id="demonstrate">
+      <div>
+        <div class="container my-5">
+          <div class="wow fadeInUp">
+            <h2 class="h1 h1-responsive text-center my-5">DEMONSTRATE 🎥</h2>
+          </div>
+          <img src="./imgs/Samples/visual.png" alt="The framework of SEAGULL" style="height: auto; width: 100%;">
+        </div>
+      </div>
+    </section>
+
+    <section class="text-center py-5 grey lighten-2" id="download-zone">
+      <div class="container">
+        <div class="wow fadeInUp">
+          <h2 class="h1 pt-5 pb-3">DOWNLOAD</h2>
+          <p class="px-5 mb-5 pb-3 lead">
+            Please raise an issue <a href='https://github.com/chencn2020/SEAGULL/issues' target="_blank">here</a> if you
+            encounter any
+            problems.
+          </p>
+        </div>
+        <div class="row wow zoomIn">
+          <div class="col-lg-4 col-md-12 mb-r">
+            <div class="card card-image">
+              <div
+                class="text-white text-center pricing-card d-flex align-items-center rgba-stylish-strong py-3 px-3 rounded">
+                <div class="card-body" style="width: 100%;">
+                  <div class="h5">Database</div>
+                  <div class="py-5"><span class="display-1"><i class="fa fa-database"></i></span></div>
+                  <div style="display: flex; justify-content: center; gap: 5px; flex-wrap: wrap;">
+                    <div style="display: flex; justify-content: center; gap: 5px;">
+                      <div style="width: 50%;">
+                        <ul class="list-unstyled">
+                          <li>
+                            <p><a class="btn btn-outline-white" style="font-size:medium;"
+                                href='https://huggingface.co/datasets/Zevin2023/SEAGULL-100w' target="_blank">
+                                <strong>SEAGULL-100w</strong></a></p>
+                          </li>
+                          <li>
+                            <p><strong>8,156</strong> Ref. images</p>
+                          </li>
+                          <li>
+                            <p><strong>6</strong> Dist. types</p>
+                          </li>
+                          <li>
+                            <p><strong>20</strong> Dist. levels</p>
+                          </li>
+                          <li>
+                            <p><strong>98w</strong> Dist. images</p>
+                          </li>
+                          <li>
+                            <p><strong>33m</strong> Mask-based ROIs </p>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div style="width: 50%;">
+                        <ul class="list-unstyled">
+                          <li>
+                            <p><a class="btn btn-outline-white" style="font-size:medium;"
+                                href='https://huggingface.co/datasets/Zevin2023/SEAGULL-3k' target="_blank">
+                                <strong>SEAGULL-3k</strong></a></p>
+                          </li>
+                          <li>
+                            <p><strong>968</strong> Dist. images</p>
+                          </li>
+                          <li>
+                            <p><strong>3,261</strong> Mask-based ROIs </p>
+                          </li>
+                          <li>
+                            <p><strong>9,783</strong> Annotations </p>
+                          </li>
+                          <li>
+                            <p><strong>Mixture distortions annotations</strong></p>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-12 mb-r">
+            <div class="card card-image">
+              <div
+                class="text-white text-center pricing-card d-flex align-items-center rgba-red-strong py-3 px-3 rounded">
+                <div class="card-body">
+                  <div class="h5">Code</div>
+                  <div class="py-5"><span class="display-1"><i class="fa fa-code"></i></span></div>
+                  <ul class="list-unstyled">
+                    <li>
+                      <p><a class="btn btn-outline-white" style="font-size:medium;"
+                          href='https://huggingface.co/spaces/Zevin2023/SEAGULL' target="_blank"> <strong>Online
+                            Demo</strong></a></p>
+                    </li>
+                    <li>
+                      <p><a class="btn btn-outline-white" style="font-size:medium;"
+                          href='https://github.com/chencn2020/SEAGULL' target="_blank"> <strong>Public Code</strong></a>
+                      </p>
+                    </li>
+                    <li>
+                      <p><a class="btn btn-outline-white" style="font-size:medium;"
+                          href='https://huggingface.co/Zevin2023/SEAGULL-7B' target="_blank">
+                          <strong>Checkpoint</strong></a></p>
+                    </li>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-12 mb-r">
+            <div class="card card-image">
+              <div
+                class="text-white text-center pricing-card d-flex align-items-center rgba-teal-strong py-3 px-3 rounded">
+                <div class="card-body">
+                  <div class="h5">Paper</div>
+                  <div class="py-5"><span class="display-1"><i class="fa fa-file"></i></span></div>
+                  <ul class="list-unstyled">
+                    <li>
+                      <p><a class="btn btn-outline-white" style="font-size:medium;"
+                          href='https://arxiv.org/abs/2411.10161' target="_blank"> <strong>Arxiv</strong></a></p>
+                    </li>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="text-center py-5" id="acknowledgement">
+      <div>
+        <div class="container my-5">
+          <div class="wow fadeInUp">
+            <h2 class="h1 h1-responsive text-center my-5">ACKNOWLEDGEMENT 💌</h2>
+            <ul style="list-style-type: none; padding-left: 0; text-align: left;">
+              <li style="margin-bottom: 10px;">
+                <strong><a href="https://github.com/CircleRadon/Osprey" target="_blank"
+                    style="color: #2980b9; text-decoration: none;">Osprey</a></strong>
+                and
+                <strong><a href="https://github.com/haotian-liu/LLaVA" target="_blank"
+                    style="color: #2980b9; text-decoration: none;">LLaVA-v1.5</a></strong>: We build this repository
+                based on them.
+              </li>
+              <li style="margin-bottom: 10px;">
+                <strong><a href="http://loki.disi.unitn.it/RAISE/" target="_blank"
+                    style="color: #2980b9; text-decoration: none;">RAISE</a></strong>: The distorted images in
+                SEAGULL-100w are constructed based on this dataset.
+              </li>
+              <li style="margin-bottom: 10px;">
+                <strong><a href="https://segment-anything.com/" target="_blank"
+                    style="color: #2980b9; text-decoration: none;">SAM</a></strong>
+                and
+                <strong><a href="https://github.com/UX-Decoder/Segment-Everything-Everywhere-All-At-Once"
+                    target="_blank" style="color: #2980b9; text-decoration: none;">SEEM</a></strong>: The mask-based
+                ROIs are generated using these two awesome works. SAM is used to get the segmentation result in the
+                demo.
+              </li>
+              <li style="margin-bottom: 10px;">
+                <strong><a href="https://github.com/chaofengc/IQA-PyTorch" target="_blank"
+                    style="color: #2980b9; text-decoration: none;">TOPIQ</a></strong>: The quality scores and importance
+                scores for ROIs are generated using this great FR-IQA.
+              </li>
+            </ul>
+          </div>
+
+          <div class="row">
+            <div class="column" style="text-align:center">
+            </div>
+            <div class="column" style="text-align:center">
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    </div>
+    <footer class="page-footer special-color-dark text-white center-on-small-only pt-0 mt-0">
+      <div class="footer-copyright">
+        <div class="container-fluid text-center">
+          <br />
+          <p>&copy; <a href="http://39.106.58.113:11880/" target="_blank"> Vision & Security Laboratory</a>
+            - Design: <a href="https://baidut.github.io/PaQ-2-PiQ/" target="_blank">PaQ-2-PiQ</a></p>
+        </div>
+      </div>
+    </footer>
+    <script>new WOW().init();</script>
+</body>
+
+</html>

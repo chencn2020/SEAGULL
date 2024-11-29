@@ -1,4 +1,4 @@
-*.pth
-*.bin
-gradio-bbox/
-seagull.egg-info/
+fastiqa
+\!*
+.idea
+.ipynb_checkpoints
