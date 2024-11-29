@@ -11,8 +11,6 @@ class Main_ui():
         
         self.example_list = self.load_example()
         self.sam = SAM_Inference()
-        # self.sam_predictor = get_sam_predictor()
-        # self.mask_generator = get_mask_generator()
     
     def load_example(self):
         examples = []

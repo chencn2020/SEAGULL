@@ -11,13 +11,14 @@
 
 :rocket:  :rocket: :rocket: **News:**
 - To be updated...
+- ✅ **Nov. 29, 2024**: We release the [online](#online-demo) and [offline](#offline-demo) demo for SEAGULL.
 - ✅ **Nov. 25, 2024**: We make SEAGULL-100w publicly available at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w) and [Baidu Netdisk](https://pan.baidu.com/s/1PY_EqdwY1FsCVfNpEXrlHA?pwd=i7h1). More details can be found at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w).
 - ✅ **Nov. 12, 2024**: We create this repository.
 
 
 ## TODO List 📝
 - [x] Release the SEAGULL-100w dataset.
-- [] Release the online demo.
+- [x] Release the online and offline demo.
 - [] Release the checkpoints and inference codes.
 - [] Release the training codes.
 - [] Release the SEAGULL-3k dataset.
@@ -45,7 +46,8 @@ Click 👇 to try our demo.
 
 ### Offline demo
 
-💻 **requirments:** For this demo, it needs about `17GB` GPU memory for SEAGULL(15GB) and SAM(2GB).
+For this demo, it needs about `17GB` GPU memory for SEAGULL(15GB) and SAM(2GB).
+
 1. Create the environment
 ```
 conda create -n seagull python=3.10
@@ -60,7 +62,8 @@ pip install -e .
 pip install git+https://github.com/facebookresearch/segment-anything.git
 ```
 
-Then download [ViT-B SAM model](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) and put it into the ```checkpoints``` folder. 
+
+4. Download [ViT-B SAM model](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) and [CLIP-convnext](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/blob/main/open_clip_pytorch_model.bin), then put it into the ```checkpoints``` folder. 
 
 4. Run demo on your device.
 ```
@@ -73,10 +76,7 @@ python app.py --model Zevin2023/SEAGULL-7B
 HF_ENDPOINT=https://hf-mirror.com python app.py --model Zevin2023/SEAGULL-7B 
 ```
 
-5. You can also download checkpoints and put them into the ```checkpoints``` folder. 
-
-- [SEAGULL-7b](https://huggingface.co/Zevin2023/SEAGULL-7B) 
-- [CLIP-convnext](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/blob/main/open_clip_pytorch_model.bin)
+6. You can also download [SEAGULL-7B](https://huggingface.co/Zevin2023/SEAGULL-7B)  and put them into the ```checkpoints``` folder. 
 
 The folder structure should be:
 ```
@@ -89,13 +89,10 @@ The folder structure should be:
     └── open_clip_pytorch_model.bin
 ```
 
-Remember to change the ```"mm_vision_tower": "./checkpoints/open_clip_pytorch_model.bin"``` in ```config.json```.
-
 Then run the following command:
 ```
 python app.py --model ./checkpoints/SEAGULL-7B 
 ```
-
 ## Demonstrate 🎥
 <div id="Demonstrate"></div>
 
@@ -104,6 +101,7 @@ python app.py --model ./checkpoints/SEAGULL-7B
 
 ## Acknowledgement 💌
 <div id="Acknowledgement"></div>
+
 - [Osprey](https://github.com/CircleRadon/Osprey) and [LLaVA-v1.5](https://github.com/haotian-liu/LLaVA): We build this repostory based on them.
 - [RAISE](http://loki.disi.unitn.it/RAISE/): The Dist. images in SEAGULL-100w are constructed based on this dataset.
 - [SAM](https://segment-anything.com/) and [SEEM](https://github.com/UX-Decoder/Segment-Everything-Everywhere-All-At-Once): The mask-based ROIs are generated using these two awesome works. And SAM are used to get the segmentation result in the demo.

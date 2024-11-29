@@ -77,8 +77,8 @@ class MaskExtractor(nn.Module): # Mask-based Feature Extractor
         return mask_feat, global_mask
                     
     def forward(self, feats, masks, cropped_img):
-        global_features = []
-        local_features = []
+        global_features_list = []
+        local_features_list = []
         num_imgs = len(masks)
 
         for idx in range(num_imgs):
@@ -108,16 +108,16 @@ class MaskExtractor(nn.Module): # Mask-based Feature Extractor
             mask_feats_linear = self.feat_linear(mask_feats) #(1, q, 4096)
 
             query_feat = self.final_mlp(torch.cat((global_masks_linear, mask_feats_linear), dim=-1))
-            global_features.append(query_feat) # global
+            global_features_list.append(query_feat) # global
 
             cropped_ = cropped_.to(device=self.feat_linear.weight.device, dtype=self.feat_linear.weight.dtype) 
             global_features = self.global_vit(cropped_).to(device=self.feat_linear.weight.device, dtype=self.feat_linear.weight.dtype)  # q, 1, 32, 32
             global_features = global_features.reshape(-1, 1, 32 * 32) # q, 1, 32 * 32
             pos_feat = self.mlp(self.sa(global_features, global_features, global_features).squeeze(1))  # q, output
 
-            local_features.append(pos_feat) #(imgs_num, 1, q, 4096) # local
+            local_features_list.append(pos_feat) #(imgs_num, 1, q, 4096) # local
         
-        return global_features, local_features
+        return global_features_list, local_features_list
     
 class MaskPooling(nn.Module):
     def __init__(self):

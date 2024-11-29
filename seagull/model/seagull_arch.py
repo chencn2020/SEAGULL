@@ -92,7 +92,7 @@ class SeagullMetaForCausalLM(ABC):
                 image_features, image_features_dict = self.encode_images(images)
         
 
-        mask_feats, pos_feats = self.mask_extractor(image_features_dict, masks, cropped_img=cropped_img)
+        global_features_, local_features_ = self.mask_extractor(image_features_dict, masks, cropped_img=cropped_img)
 
         new_input_embeds = []
         new_labels = [] if labels is not None else None
@@ -151,10 +151,10 @@ class SeagullMetaForCausalLM(ABC):
                     _l = 0
                     for i, idx in enumerate(mask_idx):
                         cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids[_l:idx[0]]).detach())
-                        ## mask
-                        cur_new_input_embeds.append(mask_feats[batch_idx][i:i+1].detach())
-                        ## pos
-                        cur_new_input_embeds.append(pos_feats[batch_idx][i:i+1].detach())
+                        ## global
+                        cur_new_input_embeds.append(global_features_[batch_idx][i:i+1].detach())
+                        ## local
+                        cur_new_input_embeds.append(local_features_[batch_idx][i:i+1].detach())
                         if labels is not None:
                             cur_labels[idx[0]:idx[0]+2] = torch.full((2,), IGNORE_INDEX, device=labels.device, dtype=labels.dtype)
                         _l = idx[0]+2
@@ -164,16 +164,16 @@ class SeagullMetaForCausalLM(ABC):
                 else:
                     
                     mask_idx = torch.nonzero(cur_input_ids==self.tokenizer.convert_tokens_to_ids(['<global>'])[0])
-                    assert len(mask_idx) == len(mask_feats[batch_idx]), "mask num not equal to mask feats"
+                    assert len(mask_idx) == len(global_features_[batch_idx]), "mask num not equal to mask feats"
                    
                     _l = 0
                     for i, idx in enumerate(mask_idx):
                         cur_raw_new_input_embeds = self.get_model().embed_tokens(cur_input_ids[_l:idx[0]])
                         cur_new_input_embeds.append(cur_raw_new_input_embeds)
-                        ## mask
-                        cur_new_input_embeds.append(mask_feats[batch_idx][i:i+1].to(cur_raw_new_input_embeds.dtype))
-                        ## pos
-                        cur_new_input_embeds.append(pos_feats[batch_idx][i:i+1].to(cur_raw_new_input_embeds.dtype))
+                        ## global
+                        cur_new_input_embeds.append(global_features_[batch_idx][i:i+1].to(cur_raw_new_input_embeds.dtype))
+                        ## local
+                        cur_new_input_embeds.append(local_features_[batch_idx][i:i+1].to(cur_raw_new_input_embeds.dtype))
 
                         if labels is not None:
                             cur_labels[idx[0]:idx[0]+2] = torch.full((2,), IGNORE_INDEX, device=labels.device, dtype=labels.dtype)
@@ -235,7 +235,7 @@ class SeagullMetaForCausalLM(ABC):
             tokenizer.add_tokens([DEFAULT_IMAGE_PATCH_TOKEN], special_tokens=True)
             self.resize_token_embeddings(len(tokenizer))
 
-        mask_tokens = ['<global>', '<pos>']
+        mask_tokens = ['<global>', '<local>']
         num_new_tokens = tokenizer.add_tokens(mask_tokens, special_tokens=True)
 
         if model_args.mm_use_im_start_end:
