@@ -1,0 +1,4 @@
+*.pth
+*.bin
+gradio-bbox/
+seagull.egg-info/
