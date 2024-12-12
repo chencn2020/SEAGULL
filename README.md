@@ -32,6 +32,7 @@
 5. [Acknowledgement 💌](#Acknowledgement)
 
 <div id="Introduction"></div>
+
 ## Introduction 👀
 
 <b style="color:rgb(140, 27, 19)"> TL;DR: </b> We propose a novel network (SEAGULL) and construct two datasets (SEAGULL-100w and SEAGULL-3k) to achieve fine-grained IQA for any ROIs.
@@ -41,6 +42,7 @@
 <img src="./imgs/SEAGULL/framework.png" alt="The framework of SEAGULL" style="height: auto; width: 100%;">
 
 <div id="Try-Our-Demo"></div>
+
 ## Try Our Demo 🕹️
 
 ### Online demo
@@ -109,6 +111,7 @@ python app.py --model ./checkpoints/SEAGULL-7B
 ```
 
 <div id="Run-SEAGULL"></div>
+
 ## Run SEAGULL 🛠️
 
 ### Preparation
@@ -156,13 +159,14 @@ python3 inference.py \
 ```
 
 <div id="Demonstrate"></div>
+
 ## Demonstrate 🎥
 
 <img src="./imgs/SEAGULL/visual.png" alt="Demonstration of SEAGULL" style="height: auto; width: 100%;">
 
+<div id="Acknowledgement"></div>
 
 ## Acknowledgement 💌
-<div id="Acknowledgement"></div>
 
 - [Osprey](https://github.com/CircleRadon/Osprey) and [LLaVA-v1.5](https://github.com/haotian-liu/LLaVA): We build this repostory based on them.
 - [RAISE](http://loki.disi.unitn.it/RAISE/): The Dist. images in SEAGULL-100w are constructed based on this dataset.
