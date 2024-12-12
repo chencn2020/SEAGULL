@@ -31,8 +31,8 @@
 4. [Demonstrate 🎥](#Demonstrate)
 5. [Acknowledgement 💌](#Acknowledgement)
 
-## Introduction 👀
 <div id="Introduction"></div>
+## Introduction 👀
 
 <b style="color:rgb(140, 27, 19)"> TL;DR: </b> We propose a novel network (SEAGULL) and construct two datasets (SEAGULL-100w and SEAGULL-3k) to achieve fine-grained IQA for any ROIs.
 
@@ -40,8 +40,8 @@
 
 <img src="./imgs/SEAGULL/framework.png" alt="The framework of SEAGULL" style="height: auto; width: 100%;">
 
-## Try Our Demo 🕹️
 <div id="Try-Our-Demo"></div>
+## Try Our Demo 🕹️
 
 ### Online demo
 Click 👇 to try our demo.
@@ -108,7 +108,7 @@ Then run the following command:
 python app.py --model ./checkpoints/SEAGULL-7B 
 ```
 
-
+<div id="Run-SEAGULL"></div>
 ## Run SEAGULL 🛠️
 
 ### Preparation
@@ -155,8 +155,8 @@ python3 inference.py \
 --model ./checkpoints/SEAGULL-7B 
 ```
 
-## Demonstrate 🎥
 <div id="Demonstrate"></div>
+## Demonstrate 🎥
 
 <img src="./imgs/SEAGULL/visual.png" alt="Demonstration of SEAGULL" style="height: auto; width: 100%;">
 
