@@ -44,7 +44,7 @@
 ## Try Our Demo 🕹️
 
 ### Online demo
-Click 👇 to try our demo.
+Click 👇 to try our demo. You might to click ```Restart this Space``` to wake our demo up 🌞
 
 <a href="https://huggingface.co/spaces/Zevin2023/SEAGULL"><img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm-dark.svg" alt="Open in Spaces" style="max-width: 100%; height: auto;"></a>
 
