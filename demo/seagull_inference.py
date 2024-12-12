@@ -13,6 +13,7 @@ import numpy as np
 import cv2
 from typing import List
 from PIL import Image
+from pycocotools import mask as mask_utils
 
 class Seagull():
     def __init__(self, model_path, device='cuda'):
@@ -40,9 +41,9 @@ class Seagull():
         begin_str = "<image>\nThis provides an overview of the image.\n Please answer the following questions about the provided region. Note: Distortions include: blur, colorfulness, compression, contrast exposure and noise.\n Here is the region <global><local>. "
         
         instruction = {
-            'distortion analysis': 'Provide the distortion type of this region.',
-            'quality score': 'Analyze the quality of this region.',
-            'importance score': 'Consider the impact of this region on the overall image quality. Analyze its importance to the overall image quality.'
+            'distortion': 'Provide the distortion type of this region.',
+            'quality': 'Analyze the quality of this region.',
+            'importance': 'Consider the impact of this region on the overall image quality. Analyze its importance to the overall image quality.'
         }
         
         self.ids_input = {}
@@ -70,7 +71,7 @@ class Seagull():
         else:
             preprocessed_img = img.copy()
 
-        return (preprocessed_img, preprocessed_img, preprocessed_img)
+        return (preprocessed_img, preprocessed_img, preprocessed_img, preprocessed_img)
 
     def preprocess(self, img):
         image = self.image_processor.preprocess(img,
@@ -83,19 +84,31 @@ class Seagull():
                                                 align_corners=False).squeeze(0)
         
         return image
-    
-    def seagull_predict(self, img, mask, instruct_type):
-        image = self.preprocess(img)
         
+    def seagull_predict(self, img, mask, instruct_type, mask_type='rle'):
+        if isinstance(img, str):
+            img = cv2.imread(img)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            h, w, _ = img.shape
+            
+            if mask_type == 'rle': # use the mask to indicate the roi
+                compressed_rle = {'size' : [h, w], 'counts' : mask}
+                mask = mask_utils.decode(compressed_rle)
+            elif mask_type == 'points': # use the point to indicate the roi
+                x_min, y_min, w1, h1 = mask
+                x_max, y_max = x_min + w1, y_min + h1
+                mask = np.zeros_like(img[:, :, 0])
+                mask[max(0, y_min):min(y_max, mask.shape[0]), max(0, x_min):min(x_max, mask.shape[1])] = 1
+            
+        image = self.preprocess(img)
         mask = np.array(mask, dtype=np.int)
+        
         ys, xs = np.where(mask > 0)
         if len(xs) > 0 and len(ys) > 0:
-            # Find the minimal bounding rectangle for the entire mask
             x_min, x_max = np.min(xs), np.max(xs)
             y_min, y_max = np.min(ys), np.max(ys)
             w1 = x_max - x_min
             h1 = y_max - y_min
-            
             bounding_box = (x_min, y_min, w1, h1)
         else:
             bounding_box = None
@@ -104,7 +117,7 @@ class Seagull():
         mask = np.array(mask > 0.1, dtype=np.uint8)
         masks = torch.Tensor(mask).unsqueeze(0).to(self.model.device)
         
-        input_ids = self.ids_input[instruct_type.lower()]
+        input_ids = self.ids_input[instruct_type.split()[0].lower()]
         
         x1, y1, w1, h1 = list(map(int, bounding_box))  # x y w h
         cropped_img = img[y1:y1 + h1, x1:x1 + w1]
@@ -127,8 +140,8 @@ class Seagull():
                 max_new_tokens=2048,
                 use_cache=True,
                 num_beams=1,
-                top_k = 0, # 不进行topk
-                top_p = 1, # 累计概率为
+                top_k = 0,
+                top_p = 1,
                 )
 
             self.model.forward = self.model.orig_forward

@@ -1,4 +1,7 @@
 *.pth
 *.bin
+*.zip
 gradio-bbox/
 seagull.egg-info/
+segment-anything/
+.ipynb_checkpoints/

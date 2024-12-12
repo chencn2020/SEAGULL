@@ -4,31 +4,6 @@ import numpy as np
 import torch
 import gradio as gr
 
-class ImageSketcher(gr.Image):
-    """
-    Code is from https://github.com/jshilong/GPT4RoI/blob/7c157b5f33914f21cfbc804fb301d3ce06324193/gpt4roi/app.py#L365
-
-    Fix the bug of gradio.Image that cannot upload with tool == 'sketch'.
-    """
-
-    is_template = True  # Magic to make this work with gradio.Block, don't remove unless you know what you're doing.
-
-    def __init__(self, **kwargs):
-        super().__init__(tool='boxes', **kwargs)
-
-    def preprocess(self, x):
-        if x is None:
-            return x
-        if self.tool == 'boxes' and self.source in ['upload', 'webcam']:
-            if isinstance(x, str):
-                x = {'image': x, 'boxes': []}
-            else:
-                assert isinstance(x, dict)
-                assert isinstance(x['image'], str)
-                assert isinstance(x['boxes'], list)
-        x = super().preprocess(x)
-        return x
-    
 def process_mask_to_show(mask):
     '''
         Process the mask to show on the gradio.Image

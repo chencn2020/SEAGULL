@@ -11,6 +11,7 @@
 
 :rocket:  :rocket: :rocket: **News:**
 - To be updated...
+- ✅ **Dec. 12, 2024**: We release the checkpoints [SEAGULL-7B](https://huggingface.co/Zevin2023/SEAGULL-7B) and inference codes.
 - ✅ **Nov. 29, 2024**: We release the [online](#online-demo) and [offline](#offline-demo) demo for SEAGULL.
 - ✅ **Nov. 25, 2024**: We make SEAGULL-100w publicly available at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w) and [Baidu Netdisk](https://pan.baidu.com/s/1PY_EqdwY1FsCVfNpEXrlHA?pwd=i7h1). More details can be found at [Hugging Face](https://huggingface.co/datasets/Zevin2023/SEAGULL-100w).
 - ✅ **Nov. 12, 2024**: We create this repository.
@@ -19,15 +20,16 @@
 ## TODO List 📝
 - [x] Release the SEAGULL-100w dataset.
 - [x] Release the online and offline demo.
-- [] Release the checkpoints and inference codes.
+- [x] Release the checkpoints and inference codes.
 - [] Release the training codes.
 - [] Release the SEAGULL-3k dataset.
 
 ## Contents 📌
 1. [Introduction 👀](#Introduction)
 2. [Try Our Demo 🕹️](#Try-Our-Demo)
-3. [Demonstrate 🎥](#Demonstrate)
-4. [Acknowledgement 💌](#Acknowledgement)
+3. [Run SEAGULL 🛠️](#Run-SEAGULL)
+4. [Demonstrate 🎥](#Demonstrate)
+5. [Acknowledgement 💌](#Acknowledgement)
 
 ## Introduction 👀
 <div id="Introduction"></div>
@@ -46,28 +48,38 @@ Click 👇 to try our demo.
 
 <a href="https://huggingface.co/spaces/Zevin2023/SEAGULL"><img src="https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm-dark.svg" alt="Open in Spaces" style="max-width: 100%; height: auto;"></a>
 
+<img src="./imgs/SEAGULL/point_demo.gif" />
+
+<img src="./imgs/SEAGULL/mask_demo.gif" />
+
 ### Offline demo
 
 ⚠️ Please make sure the GPU memory of your device is larger than `17GB`.
 
 1. Create the environment
 ```
-conda create -n seagull python=3.10
+conda create -n seagull python=3.10 -y
 conda activate seagull
 pip install -e .
 ```
 
 2. Install [Gradio Extention](https://github.com/chencn2020/gradio-bbox) for drawing boxes on images.
 
+> [!TIP]
+> If the network is not accessible, try the following steps. It might work.
+
+- Download the ```gradio.zip``` from [Baidu Netdisk](https://pan.baidu.com/s/1N4IuamNPpWRgaWoTndNoDA?pwd=pkyn) or [Google Drive](https://drive.google.com/file/d/1gydVOQ_OPnNMugAqojUW_-bCGpDzlC22/view?usp=sharing).
+- Run ```unzip gradio.zip``` and then gain the ```gradio-bbox``` folder.
+- Run ```cd gradio-bbox && pip install -e .```
+
 3. Install Segment Anything Model.
 ```
 pip install git+https://github.com/facebookresearch/segment-anything.git
 ```
 
+4. Download [ViT-B SAM model](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) and [CLIP-convnext](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/blob/main/open_clip_pytorch_model.bin), then put them into the ```checkpoints``` folder. 
 
-4. Download [ViT-B SAM model](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_b_01ec64.pth) and [CLIP-convnext](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/blob/main/open_clip_pytorch_model.bin), then put it into the ```checkpoints``` folder. 
-
-4. Run demo on your device.
+5. Run demo on your device.
 ```
 python app.py --model Zevin2023/SEAGULL-7B
 ```
@@ -78,7 +90,7 @@ python app.py --model Zevin2023/SEAGULL-7B
 HF_ENDPOINT=https://hf-mirror.com python app.py --model Zevin2023/SEAGULL-7B 
 ```
 
-6. You can also download [SEAGULL-7B](https://huggingface.co/Zevin2023/SEAGULL-7B)  and put them into the ```checkpoints``` folder. 
+6. You can also download [SEAGULL-7B](https://huggingface.co/Zevin2023/SEAGULL-7B) and put them into the ```checkpoints``` folder. 
 
 The folder structure should be:
 ```
@@ -95,10 +107,58 @@ Then run the following command:
 ```
 python app.py --model ./checkpoints/SEAGULL-7B 
 ```
+
+
+## Run SEAGULL 🛠️
+
+### Preparation
+
+1. Create the environment
+```
+conda create -n seagull python=3.10 -y
+conda activate seagull
+pip install -e .
+```
+
+2. If you want to **train** SEAGULL by yourself, install the additional packages.
+
+```
+pip install -e ".[train]"
+pip install flash-attn --no-build-isolation
+```
+
+3. Download [CLIP-convnext](https://huggingface.co/laion/CLIP-convnext_large_d_320.laion2B-s29B-b131K-ft-soup/blob/main/open_clip_pytorch_model.bin) and [SEAGULL-7B](https://huggingface.co/Zevin2023/SEAGULL-7B), then put them into the ```checkpoints``` folder. 
+
+The folder structure should be:
+```
+├── checkpoints
+    ├── SEAGULL-7B
+    │   ├── config.json
+    │   ├── pytorch_model-xxxxx-of-xxxxx.bin
+    │   └── xxx
+    └── open_clip_pytorch_model.bin
+```
+### Usage for training
+
+Coming soon.
+
+### Usage for inference
+
+1. We provide a `./demo/inference_demo.json` template for better understanding.
+2. Run the following command for inference:
+``` bash
+python3 inference.py \
+--img_dir ./imgs/Examples \
+--json_path ./demo/inference_demo.json \
+--mask_type rel \ # rel or points (x, y, w, h)
+--inst_type quality \ # quality, importance, distortion
+--model ./checkpoints/SEAGULL-7B 
+```
+
 ## Demonstrate 🎥
 <div id="Demonstrate"></div>
 
-<img src="./imgs/Samples/visual.png" alt="The framework of SEAGULL" style="height: auto; width: 100%;">
+<img src="./imgs/SEAGULL/visual.png" alt="Demonstration of SEAGULL" style="height: auto; width: 100%;">
 
 
 ## Acknowledgement 💌

@@ -2,7 +2,6 @@ import os
 import gradio as gr
 from demo.sam_inference import SAM_Inference
 from demo.seagull_inference import Seagull
-from demo.mask_utils import ImageSketcher
 
 class Main_ui():
     def __init__(self, args) -> None: 
@@ -58,7 +57,7 @@ class Main_ui():
 
             with gr.TabItem("Mask-based ROIs (BBox)"):
                 with gr.Row():
-                    input_image_BBOX = ImageSketcher(type="numpy", label='Input image', height=512)
+                    input_image_BBOX = gr.Image(tool='boxes', type="numpy", label='Input image', height=512)
                     output_mask_BBOX = gr.Image(label='Mask-based ROI', height=512)
                 
                 with gr.Row():
@@ -72,17 +71,33 @@ class Main_ui():
                         
                         BBOX_example = gr.Dataset(label='Examples', components=[input_image_BBOX], samples=self.example_list)
 
-            # click point
+            with gr.TabItem("Mask-based ROIs (BBox with Points)"):
+                with gr.Row():
+                    input_image_BBOX_Points = gr.Image(tool='boxes', type="numpy", label='Input image', height=512)
+                    output_mask_BBOX_Points = gr.Image(label='Mask-based ROI', height=512)
+                
+                with gr.Row():
+                    output_BBOX_Points_mask_on_img = gr.Image(label='Mask on image', height=512)
+                        
+                    with gr.Column():
+                        radio_BBOX_Points = gr.Radio(label='Analysis type', choices=['Quality Score', 'Importance Score', 'Distortion Analysis'], value='Quality Score')
+                        output_text_BBOX_Points = gr.Textbox(label='ROI Quality Analysis')
+                        box_seg_button_with_point = gr.Button('Generate mask and analysis')
+                        box_analyse_button_with_point = gr.Button('Analysis')
+                        
+                        BBOX_Points_example = gr.Dataset(label='Examples', components=[input_image_BBOX_Points], samples=self.example_list)
+
+            # 1. click point
             input_image_ponit.upload(
                 self.seagull.init_image,
                 [input_image_ponit],
-                [preprocessed_img, input_image_ponit, input_image_BBOX]
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
             )
 
             point_example.click(
                 self.seagull.init_image,
                 [point_example],
-                [preprocessed_img, input_image_ponit, input_image_BBOX]
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
             )
             
             # after clicking on the image
@@ -102,17 +117,17 @@ class Main_ui():
                 [output_text_point]
             )
 
-            # draw frame
+            # 2. draw frame and use SAM to indicate the rois
             input_image_BBOX.upload(
                 self.seagull.init_image,
                 [input_image_BBOX],
-                [preprocessed_img, input_image_ponit, input_image_BBOX]
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
             )
 
             BBOX_example.click(
                 self.seagull.init_image,
                 [BBOX_example],
-                [preprocessed_img, input_image_ponit, input_image_BBOX]
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
             )
 
             # after drawing a frame on the image
@@ -136,6 +151,42 @@ class Main_ui():
                 self.seagull.seagull_predict,
                 [preprocessed_img, binary_mask, radio_BBOX],
                 [output_text_BBOX]
+            )
+            
+            # 3. draw frame and use the points
+            input_image_BBOX.upload(
+                self.seagull.init_image,
+                [input_image_BBOX],
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
+            )
+
+            BBOX_Points_example.click(
+                self.seagull.init_image,
+                [BBOX_Points_example],
+                [preprocessed_img, input_image_ponit, input_image_BBOX, input_image_BBOX_Points]
+            )
+
+            # after drawing a frame on the image
+            input_image_BBOX_Points.select(
+                self.sam.gen_box_point,
+                [input_image_BBOX_Points],
+                [output_mask_BBOX_Points, output_BBOX_Points_mask_on_img, binary_mask]
+            )
+            
+            box_seg_button_with_point.click(
+                self.sam.gen_box_point,
+                [input_image_BBOX_Points],
+                [output_mask_BBOX_Points, output_BBOX_Points_mask_on_img, binary_mask]
+            ).then(
+                self.seagull.seagull_predict,
+                [preprocessed_img, binary_mask, radio_BBOX_Points],
+                [output_text_BBOX_Points]
+            )
+            
+            box_analyse_button_with_point.click(
+                self.seagull.seagull_predict,
+                [preprocessed_img, binary_mask, radio_BBOX_Points],
+                [output_text_BBOX_Points]
             )
 
         return demo

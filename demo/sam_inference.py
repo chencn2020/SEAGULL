@@ -53,6 +53,25 @@ class SAM_Inference:
 
         return process_mask_to_show(mask), res, mask
     
+    def gen_box_point(self, inp):
+        if inp is None:
+            raise gr.Error("Please upload an image first!")
+        image = inp['image']
+        if len(inp['boxes']) == 0:
+            raise gr.Error("Please clear the raw boxes and draw a box first!")
+        boxes = inp['boxes'][-1]
+
+        input_box = np.array([boxes[0], boxes[1], boxes[2], boxes[3]]).astype(int)
+        mask = np.zeros_like(image[:,:,0])
+
+        mask[input_box[1]:input_box[3], input_box[0]:input_box[2]] = 1  # generate the mask based on bbox points
+
+        colored_mask = mask_foreground(mask)
+        res = img_add_masks(image, colored_mask, mask)
+
+        return process_mask_to_show(mask), res, mask
+
+    
     def run_inference(self, input_x, selected_points):
         if len(selected_points) == 0:
             return []
