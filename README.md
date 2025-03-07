@@ -154,7 +154,7 @@ python3 inference.py \
 --img_dir ./imgs/Examples \
 --json_path ./demo/inference_demo.json \
 --mask_type rel \ # rel or points (x, y, w, h)
---inst_type quality \ # quality, importance, distortion
+--inst_type quality \ # quality, distortion
 --model ./checkpoints/SEAGULL-7B 
 ```
 
